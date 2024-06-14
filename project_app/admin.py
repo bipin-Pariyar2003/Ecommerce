@@ -34,6 +34,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'id')
     inlines = [OrderDetailInline]
 
+
     
 admin.site.register(User, UserAdmin)
 
@@ -41,6 +42,6 @@ admin.site.register(Category)
 
 admin.site.register(Product)
 
-admin.site.register(Order)
+admin.site.register(Order, OrderAdmin)
 
 admin.site.register(OrderDetail)

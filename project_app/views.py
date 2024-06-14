@@ -167,9 +167,9 @@ def checkout(request):
 
         # Create order details for each cart item
         for cart_item in cart_items:
-            order_detail = OrderDetail.objects.create(
+            OrderDetail.objects.create(
                 order=order,
-                item_name=cart_item.product.product_name,
+                product=cart_item.product,
                 quantity=cart_item.quantity,
                 price=cart_item.product.product_price
             )
@@ -207,8 +207,9 @@ def view_orders(request):
     orders = Order.objects.filter(user=request.user)
     order_details = []
     for order in orders:
-        details = order.details.all()  # Get all order details associated with the order
-        order_details.append({'order': order, 'details': details})
+        items = order.details.all()  # Use the related_name 'details'
+        item_details = [{'name': item.product.product_name, 'quantity': item.quantity} for item in items]
+        order_details.append({'order': order, 'item_details': item_details})
     return render(request, 'view_orders.html', {'order_details': order_details})
 
 
