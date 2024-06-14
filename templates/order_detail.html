@@ -1,0 +1,21 @@
+<!-- templates/order_detail.html -->
+{% extends "common_components.html" %}
+
+{% block start %}
+<h2>Order Details</h2>
+
+<p>Order ID: {{ order.id }}</p>
+<p>User: {{ order.user.username }}</p>
+<p>Status: {{ order.status }}</p>
+<p>Total Price: {{ order.total_price }}</p>
+
+<h3>Items:</h3>
+<ul>
+    {% for detail in order_details %}
+        <li>{{ detail.product.product_name }} ({{ detail.quantity }})</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'update_order_status' order.id %}" class="btn btn-primary">Update Order Status</a>
+<a href="{% url 'admin:index' %}" class="btn btn-secondary">Back to Admin</a>
+{% endblock %}

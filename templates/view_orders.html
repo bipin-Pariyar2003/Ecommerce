@@ -21,8 +21,8 @@
                 <td>{{ order_detail.order.status }}</td>
                 <td>
                     <ul>
-                    {% for item_name in order_detail.item_names %}
-                        <li>{{ item_name }}</li>
+                    {% for detail in order_detail.details %}
+                        <li>{{ detail.item_name }} ({{ detail.quantity }}) - {{ detail.price }}</li>
                     {% endfor %}
                     </ul>
                 </td>

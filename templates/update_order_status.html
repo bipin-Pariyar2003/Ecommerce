@@ -1,10 +1,18 @@
-<!-- update_order_status.html -->
-<form method="POST">
+{% extends "common_components.html" %}
+
+{% block start %}
+<h2>Update Order Status</h2>
+
+<form method="post">
     {% csrf_token %}
-    <label for="status">Order Status:</label>
+    <label for="status">Status:</label>
     <select name="status" id="status">
-        <option value="PLACED" {% if order.status == 'PLACED' %} selected {% endif %}>Order Placed</option>
-        <option value="DELIVERED" {% if order.status == 'DELIVERED' %} selected {% endif %}>Order Delivered</option>
+        {% for value, label in order.STATUS_CHOICES %}
+            <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
     </select>
-    <button type="submit">Update Status</button>
+    <button type="submit" class="btn btn-primary">Update</button>
 </form>
+
+<a href="{% url 'order_detail' order.id %}" class="btn btn-secondary">Back to Order Details</a>
+{% endblock %}

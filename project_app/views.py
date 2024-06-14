@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 import re
 
+
 #Home page--------------------------------------------------------------------------
 def index(request):
     queryset= Product.objects.all()
@@ -62,7 +63,7 @@ def register(request):
             user_phone=user_phone
         )
         
-        messages.info(request, "Registered Successfully!!")
+        messages.info(request, "Registration pending, You will be able to Login after admin approval")
         return redirect("/register/")
     
     queryset= User.objects.all()
@@ -104,10 +105,12 @@ def add_to_cart(request, product_id):
         product = get_object_or_404(Product, id=product_id)
         cart, created = Cart.objects.get_or_create(user=request.user)
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product, user=request.user)
+        
         if not created:
-            cart_item.quantity += 1
-            cart_item.save()
-        messages.info(request, "Product Added to Cart")
+            messages.warning(request, "Product is already in the cart")
+        else:
+            messages.info(request, "Product Added to Cart")
+        
     return redirect('/index/')
 
 
@@ -117,7 +120,9 @@ def view_cart(request):
     cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
     total_price = sum(item.quantity * item.product.product_price for item in cart_items)
-    
+     # Adding product_quantity to each cart item for use in the template
+    for item in cart_items:
+        item.product_quantity = item.product.product_quantity
     
     context = {
         'cart_items': cart_items, 'total_price': total_price
@@ -160,8 +165,15 @@ def checkout(request):
         # Create the order
         order = Order.objects.create(user=user, total_price=total_price)
 
-        # Add cart items to the order
-        order.items.add(*cart_items)
+        # Create order details for each cart item
+        for cart_item in cart_items:
+            order_detail = OrderDetail.objects.create(
+                order=order,
+                item_name=cart_item.product.product_name,
+                quantity=cart_item.quantity,
+                price=cart_item.product.product_price
+            )
+            order.items.add(cart_item)
 
         # Clear the user's cart
         cart_items.delete()
@@ -185,7 +197,6 @@ def checkout(request):
 
         return render(request, 'checkout.html', context)
 
-
 #Thankyou
 def thankyou(request):
     return render(request, "thankyou.html", {})
@@ -196,9 +207,8 @@ def view_orders(request):
     orders = Order.objects.filter(user=request.user)
     order_details = []
     for order in orders:
-        items = order.items.all()  # Get all items associated with the order
-        item_names = [item.product.product_name for item in items]  # Extract item names
-        order_details.append({'order': order, 'item_names': item_names})
+        details = order.details.all()  # Get all order details associated with the order
+        order_details.append({'order': order, 'details': details})
     return render(request, 'view_orders.html', {'order_details': order_details})
 
 
@@ -214,3 +224,14 @@ def update_order_status(request, order_id):
         return redirect('order_detail', order_id=order_id)
 
     return render(request, 'update_order_status.html', {'order': order})
+
+@staff_member_required
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    order_details = order.details.all()
+    context = {
+        'order': order,
+        'order_details': order_details,
+    }
+    return render(request, 'order_detail.html', context)
+

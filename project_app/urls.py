@@ -31,8 +31,11 @@ urlpatterns = [
     path('update-cart-item/<int:item_id>/', update_cart_item, name='update_cart_item'),
     path('checkout/',checkout, name='checkout'),
     path('thankyou/', thankyou, name="thankyou"),
-    path('order/<int:order_id>/update_status/', update_order_status, name='update_order_status'),
+    # path('order/<int:order_id>/update_status/', update_order_status, name='update_order_status'),
     path('orders/', view_orders, name='view_orders'),
+    path('admin/order/<int:order_id>/update/', update_order_status, name='update_order_status'),
+    # add order_detail URL pattern for redirection purpose
+    path('admin/order/<int:order_id>/',order_detail, name='order_detail'),
 
     # path('category/<str:cname>', category, name="category")
     
