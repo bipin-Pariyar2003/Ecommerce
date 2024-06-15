@@ -185,6 +185,7 @@ def checkout(request):
             receiver_name = form.cleaned_data['receiver_name']
             receiver_phone = form.cleaned_data['receiver_phone']
             receiver_address = form.cleaned_data['receiver_address']
+            payment_method = form.cleaned_data['payment_method']
 
             # Retrieve cart items and total price
             cart_items = CartItem.objects.filter(cart__user=user)
@@ -196,7 +197,8 @@ def checkout(request):
                 total_price=total_price,
                 receiver_name=receiver_name,
                 receiver_phone=receiver_phone,
-                receiver_address=receiver_address
+                receiver_address=receiver_address,
+                payment_method=payment_method  # Add this line
             )
 
             # Create order details for each cart item

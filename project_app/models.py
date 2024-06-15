@@ -104,6 +104,11 @@ class Order(models.Model):
         ('DELIVERED', 'Delivered'),
         ('CANCELLED', 'Cancelled'),
     )
+    PAYMENT_CHOICES = (
+        ('cod', 'Cash On Delivery'),
+        ('online', 'Online Payment'),
+    )
+
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(CartItem)
@@ -112,6 +117,7 @@ class Order(models.Model):
     receiver_name = models.CharField(max_length=200)
     receiver_phone = models.CharField(max_length=15)
     receiver_address = models.CharField(max_length=200)
+    payment_method = models.CharField(max_length=10, choices=PAYMENT_CHOICES, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
