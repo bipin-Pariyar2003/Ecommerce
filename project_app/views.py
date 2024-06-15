@@ -22,6 +22,23 @@ def index(request):
     context={'page':"Home", "all_products": queryset, 'data':data}
     return render(request,"index.html", context)
 
+
+
+
+#------------------------------------ Category Wise Products-------------------------------
+def products_by_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    products = Product.objects.filter(category=category)
+    data = Category.objects.all()  # Pass all categories for the navbar
+    
+    context = {
+        'page': "Products by Category",
+        'all_products': products,
+        'data': data,
+        'selected_category': category
+    }
+    return render(request, "index.html", context)
+
 #------------------- LOG OUT -----------------------------------------------
 def log_out(request):
     logout(request)

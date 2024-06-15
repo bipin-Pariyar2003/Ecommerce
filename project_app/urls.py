@@ -38,5 +38,6 @@ urlpatterns = [
     path('admin/order/<int:order_id>/',order_detail, name='order_detail'),
 
     # path('category/<str:cname>', category, name="category")
+     path('category/<int:category_id>/', products_by_category, name="products_by_category"),
     
 ]

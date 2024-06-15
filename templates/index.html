@@ -7,73 +7,62 @@
     width: 50%; /* Adjust the width as needed */
     margin: 0 auto; /* Center horizontally */
   }
-  </style>
-
-
+</style>
 
 <div class="container-fluid">
-                  {% if messages %}
-                    <div id="alert-message" class="alert alert-primary" role="alert">
-                      {% for message in messages %}
-                      {{ message }}
-                      {% endfor %}
-                    </div>
-                    {% endif %}
+  {% if messages %}
+  <div id="alert-message" class="alert alert-primary" role="alert">
+    {% for message in messages %}
+    {{ message }}
+    {% endfor %}
+  </div>
+  {% endif %}
+  
+  {% if selected_category %}
+  <h2>Products in Category: {{ selected_category.category_name }}</h2>
+  {% endif %}
+  
   <div class="row">
     {% for products in all_products %}
-      <div class="col">
-        <div class="card" style="width: 18rem;">
-          <img src="/media/{{ products.product_image }}" class="card-img-top m-2" 
-          style="max-height: 320px; max-width:100%; width:auto" 
-          alt="{{ products.product_name }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ products.product_name }}</h5>
-            <p class="card-text">
-              {{ products.product_description|first_ten_words}}...
-            </p>
-          </div>
-          <div class="card-footer text-center">
-            <div class="row">
-                <div class="col">
-                  <form method="POST" action="{% url 'add_to_cart' products.id %}">
-                    {% csrf_token %}
-                    
-                    <button type="submit" class="btn btn-primary bg-warning text-black">Add to Cart</button>
-                </form>
-                </div>
-              <div class="col">
-                <button onclick="" class="btn btn-outline-success">&#8360; {{ products.product_price }}</button>
-              </div>
+    <div class="col">
+      <div class="card" style="width: 18rem;">
+        <img src="/media/{{ products.product_image }}" class="card-img-top m-2" 
+        style="max-height: 320px; max-width:100%; width:auto" 
+        alt="{{ products.product_name }}">
+        <div class="card-body">
+          <h5 class="card-title">{{ products.product_name }}</h5>
+          <p class="card-text">
+            {{ products.product_description|first_ten_words}}...
+          </p>
+        </div>
+        <div class="card-footer text-center">
+          <div class="row">
+            <div class="col">
+              <form method="POST" action="{% url 'add_to_cart' products.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary bg-warning text-black">Add to Cart</button>
+              </form>
+            </div>
+            <div class="col">
+              <button onclick="" class="btn btn-outline-success">&#8360; {{ products.product_price }}</button>
             </div>
           </div>
         </div>
       </div>
+    </div>
     {% endfor %}
   </div>
 </div>
 
-<!-- 
-    <tbody>
-        <td><a href="/update-product/{{products.id}}" class="btn btn-success">Update</a></td>
-        <td><a href="/delete-product/{{products.id}}" class="btn btn-danger"> Delete </a></td>
-         
-      </tr>
-    </tbody>
-  </table>
-     -->
-     <script>
-      // JavaScript to hide the message after one second
-      window.onload = function() {
-        setTimeout(function() {
-          var alertMessage = document.getElementById('alert-message');
-          if (alertMessage) {
-            alertMessage.style.display = 'none';
-          }
-        }, 1000); // 1000 milliseconds = 1 second
-      };
-      </script>
-
-
+<script>
+  // JavaScript to hide the message after one second
+  window.onload = function() {
+    setTimeout(function() {
+      var alertMessage = document.getElementById('alert-message');
+      if (alertMessage) {
+        alertMessage.style.display = 'none';
+      }
+    }, 1000); // 1000 milliseconds = 1 second
+  };
+</script>
 {% endblock %}
-
-
