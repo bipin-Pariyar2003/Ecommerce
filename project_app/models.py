@@ -109,6 +109,9 @@ class Order(models.Model):
     items = models.ManyToManyField(CartItem)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PLACED')
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    receiver_name = models.CharField(max_length=200)
+    receiver_phone = models.CharField(max_length=15)
+    receiver_address = models.CharField(max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

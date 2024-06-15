@@ -172,48 +172,66 @@ def calculate_total_price(cart_items):
     total_price = sum(item.quantity * item.product.product_price for item in cart_items)
     return total_price
 
+from .forms import CheckoutForm  # Import your checkout form
+
 @login_required
 def checkout(request):
     user = request.user  # Retrieve the current user from the request
 
     if request.method == 'POST':
-        cart_items = CartItem.objects.filter(cart__user=user)
-        total_price = sum(item.quantity * item.product.product_price for item in cart_items)
+        form = CheckoutForm(request.POST)  # Bind the form data
+        if form.is_valid():
+            # Retrieve form data
+            receiver_name = form.cleaned_data['receiver_name']
+            receiver_phone = form.cleaned_data['receiver_phone']
+            receiver_address = form.cleaned_data['receiver_address']
 
-        # Create the order
-        order = Order.objects.create(user=user, total_price=total_price)
+            # Retrieve cart items and total price
+            cart_items = CartItem.objects.filter(cart__user=user)
+            total_price = sum(item.quantity * item.product.product_price for item in cart_items)
 
-        # Create order details for each cart item
-        for cart_item in cart_items:
-            OrderDetail.objects.create(
-                order=order,
-                product=cart_item.product,
-                quantity=cart_item.quantity,
-                price=cart_item.product.product_price
+            # Create the order
+            order = Order.objects.create(
+                user=user,
+                total_price=total_price,
+                receiver_name=receiver_name,
+                receiver_phone=receiver_phone,
+                receiver_address=receiver_address
             )
-            order.items.add(cart_item)
 
-        # Clear the user's cart
-        cart_items.delete()
+            # Create order details for each cart item
+            for cart_item in cart_items:
+                OrderDetail.objects.create(
+                    order=order,
+                    product=cart_item.product,
+                    quantity=cart_item.quantity,
+                    price=cart_item.product.product_price
+                )
+                order.items.add(cart_item)
 
-        messages.success(request, "Order placed successfully!")
-        return redirect('thankyou')
+            # Clear the user's cart
+            cart_items.delete()
 
-    elif request.method == 'GET':
-        
-        address = user.user_address
-        phone_number = user.user_phone
-        cart_items = CartItem.objects.filter(cart__user=user)
-        total_price = sum(item.quantity * item.product.product_price for item in cart_items)
+            messages.success(request, "Order placed successfully!")
+            return redirect('thankyou')
+    else:
+        form = CheckoutForm()  # Create an empty form instance
 
-        context = {
-            'address': address,
-            'phone_number': phone_number,
-            'cart_items': cart_items,
-            'total_price': total_price,
-        }
+    # Prepare context data
+    address = user.user_address
+    phone_number = user.user_phone
+    cart_items = CartItem.objects.filter(cart__user=user)
+    total_price = sum(item.quantity * item.product.product_price for item in cart_items)
 
-        return render(request, 'checkout.html', context)
+    context = {
+        'form': form,
+        'address': address,
+        'phone_number': phone_number,
+        'cart_items': cart_items,
+        'total_price': total_price,
+    }
+
+    return render(request, 'checkout.html', context)
 
 #Thankyou
 def thankyou(request):

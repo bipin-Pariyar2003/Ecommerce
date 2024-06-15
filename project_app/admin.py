@@ -31,7 +31,7 @@ class OrderDetailInline(admin.TabularInline):
     fields=('product', 'quantity', 'price')
     
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'total_price', 'status', 'created_at', 'updated_at')
+    list_display = ('id', 'user', 'total_price', 'status', 'created_at', 'updated_at','receiver_name', 'receiver_phone', 'receiver_address')
     # list_filter = ('status', 'created_at')
     # search_fields = ('user__username', 'id')
     inlines = [OrderDetailInline]
