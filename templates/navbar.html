@@ -15,7 +15,9 @@
               Our Products
             </a>
             <ul class="dropdown-menu">
+
               {% for category in data %}
+              <li><a class="dropdown-item" href="/index/">All Products</a></li>
               <li><a class="dropdown-item" href="#">{{category.category_name}}</a></li>
              {% endfor %}
             </ul>
