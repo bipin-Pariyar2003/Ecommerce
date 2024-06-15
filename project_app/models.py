@@ -1,6 +1,8 @@
 from typing import Any
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
 
@@ -88,7 +90,7 @@ class CartItem(models.Model):
     def __str__(self):
         return f"{self.product.product_name} ({self.quantity})"
     
-    
+
     
     
 #Order
@@ -97,7 +99,10 @@ class CartItem(models.Model):
 class Order(models.Model):
     STATUS_CHOICES = (
         ('PLACED', 'Order Placed'),
-        ('DELIVERED', 'Order Delivered'),
+        ('APPROVED', 'Approved'),
+        ('SHIPPED', 'Shipped'),
+        ('DELIVERED', 'Delivered'),
+        ('CANCELLED', 'Cancelled'),
     )
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -129,3 +134,12 @@ class OrderDetail(models.Model):
 
 
     
+# Signal to update product quantity when order is approved
+@receiver(post_save, sender=Order)
+def update_product_quantity(sender, instance, **kwargs):
+    if instance.status == 'APPROVED':
+        order_details = OrderDetail.objects.filter(order=instance)
+        for detail in order_details:
+            product = detail.product
+            product.product_quantity -= detail.quantity
+            product.save()

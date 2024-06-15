@@ -7,6 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 import re
 
 
+
 #Home page--------------------------------------------------------------------------
 def index(request):
     queryset= Product.objects.all()
@@ -242,6 +243,8 @@ def update_order_status(request, order_id):
         return redirect('order_detail', order_id=order_id)
 
     return render(request, 'update_order_status.html', {'order': order})
+
+
 
 
 
