@@ -6,7 +6,7 @@ from .models import User
 #Register your models here.
 
 class UserAdmin(BaseUserAdmin):
-    list_display = ('email', 'username', 'is_staff', 'is_active')
+    list_display = ('email', 'username', 'is_staff', 'is_active', 'created_at')
     list_filter = ('is_staff', 'is_active')
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
@@ -21,7 +21,7 @@ class UserAdmin(BaseUserAdmin):
         ),
     )
     search_fields = ('email',)
-    ordering = ('email',)
+    ordering = ('-created_at',)
     
     
 class OrderDetailInline(admin.TabularInline):

@@ -3,6 +3,7 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.utils import timezone
 
 # Create your models here.
 
@@ -38,6 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    created_at = models.DateTimeField(default=timezone.now)
     # is_approved = models.BooleanField(default=False)
     
     objects = CustomUserManager()
@@ -48,6 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = 'User'
         verbose_name_plural = 'Users'
+        ordering = ['-created_at']
         
     def get_full_name(self):
         return self.username  
