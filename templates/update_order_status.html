@@ -3,16 +3,16 @@
 {% block start %}
 <h2>Update Order Status</h2>
 
-<form method="post">
+<form method="POST">
     {% csrf_token %}
     <label for="status">Status:</label>
     <select name="status" id="status">
-        {% for value, label in order.STATUS_CHOICES %}
-            <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+        {% for choice in order._meta.get_field('status').choices %}
+            <option value="{{ choice.0 }}" {% if order.status == choice.0 %}selected{% endif %}>
+                {{ choice.1 }}
+            </option>
         {% endfor %}
     </select>
-    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="submit">Update</button>
 </form>
-
-<a href="{% url 'order_detail' order.id %}" class="btn btn-secondary">Back to Order Details</a>
 {% endblock %}

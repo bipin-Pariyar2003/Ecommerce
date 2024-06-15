@@ -225,7 +225,7 @@ def view_orders(request):
     order_details = []
     for order in orders:
         items = order.details.all()  # Use the related_name 'details'
-        item_details = [{'name': item.product.product_name, 'quantity': item.quantity} for item in items]
+        item_details = [{'name': item.product.product_name, 'quantity': item.quantity, 'status': order.status} for item in items]
         order_details.append({'order': order, 'item_details': item_details})
     return render(request, 'view_orders.html', {'order_details': order_details})
 
@@ -242,6 +242,8 @@ def update_order_status(request, order_id):
         return redirect('order_detail', order_id=order_id)
 
     return render(request, 'update_order_status.html', {'order': order})
+
+
 
 @staff_member_required
 def order_detail(request, order_id):
