@@ -5,7 +5,9 @@
 {% load multiply %}
 
 <h2 style="margin-bottom: 40px; margin-top: 20px;" class="text-center">Shopping Cart</h2>
-<a href="{% url 'view_orders' %}" class="btn btn-primary">View Your Orders</a> 
+<div class="d-flex justify-content-center" style="margin-bottom: 40px;">
+    <a href="{% url 'view_orders' %}" class="btn btn-primary">View Your Orders</a>
+</div> 
 
 {% if cart_items %}
     <table class="table">
@@ -48,7 +50,10 @@
     </div>
     
 {% else %}
-    <p>Your cart is empty.</p>
+<div class="d-flex justify-content-center" >
+    <h3>Your cart is empty.</h3>
+</div>
+    
 {% endif %}
 
 {% endblock %}

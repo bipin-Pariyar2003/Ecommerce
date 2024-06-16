@@ -1,12 +1,18 @@
 {% extends "common_components.html" %}
 
 {% block start %}
-<h2>Your Orders</h2>
+<div class="d-flex justify-content-center" style="margin-bottom: 40px; margin-top: 20px;">
+    <h2>Your Orders</h2>
+</div>
+
 
 {% if order_details %}
+<div class="d-flex justify-content-center">
+    <div class="w-75">
     <table class="table">
         <thead>
             <tr>
+                <th>S.N.</th>
                 <th>Order ID</th>
                 <th>Total Price</th>
                 <th>Status</th>
@@ -16,6 +22,7 @@
         <tbody>
         {% for order_detail in order_details %}
             <tr>
+                <td>{{forloop.counter}}</td>
                 <td>{{ order_detail.order.id }}</td>
                 <td>{{ order_detail.order.total_price }}</td>
                 <td>{{ order_detail.order.status }}</td>
@@ -30,6 +37,8 @@
         {% endfor %}
         </tbody>
     </table>
+</div>
+</div>
 {% else %}
     <p>No orders found.</p>
 {% endif %}
