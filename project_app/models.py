@@ -4,6 +4,9 @@ from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, Permis
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.utils import timezone
+from django.core.exceptions import ValidationError
+from django.db.models.functions import Lower
+from django.db.models import UniqueConstraint
 
 # Create your models here.
 
@@ -69,16 +72,34 @@ class Category(models.Model):
 
 #Product
 class Product(models.Model):
-    product_name=models.CharField(max_length=200)
-    product_price=models.IntegerField()
-    product_discount=models.IntegerField()
-    product_description=models.CharField(max_length=200)
-    product_image=models.ImageField(upload_to="product")
-    product_quantity=models.IntegerField()
-    
+    product_name = models.CharField(max_length=200)
+    product_price = models.IntegerField()
+    product_discount = models.PositiveIntegerField()
+    product_description = models.CharField(max_length=200)
+    product_image = models.ImageField(upload_to="product")
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    product_quantity = models.IntegerField()
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                Lower('product_name'),
+                name='unique_product_name_case_insensitive'
+            )
+        ]
+
     def __str__(self):
         return self.product_name
+
+    def clean(self):
+        if self.product_price is None or self.product_price <= 0:
+            raise ValidationError({'product_price': 'Price must be a positive number.'})
+        if self.product_quantity is None or self.product_quantity <= 0:
+            raise ValidationError({'product_quantity': 'Quantity must be a positive number.'})
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
 #cart
 class Cart(models.Model):
