@@ -1,48 +1,55 @@
-{% extends "common_components.html" %}
-{% block start %}
-
+{% extends "common_components.html" %} {% block start %}
 
 <div class="container">
-    <div class="row">
-        <div class="col-12 d-flex justify-content-center mt-3">
-            
-            <div class="card col-4">
-                <div class="card-header bg-warning text-center">
-                    <h1>Log In Here</h1>
-                </div>
-                <div class="card-body">
-                    <form class="p-3" enctype="multipart/form-data" method="POST">
-                        {% csrf_token %}
-                        {% if messages %}
-
-                        <div class="alert alert-primary" role="alert">
-                          {% for message in messages %}
-                          {{ message }}
-                          {% endfor %}
-                        </div>
-                        {% endif %}
-
-                        <div class="mb-3">
-                          <label for="exampleInputEmail1" class="form-label">Email id:</label>
-                          <input type="email" name="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" required>
-                          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                        </div>
-                        <div class="mb-3">
-                          <label for="exampleInputPassword1" class="form-label">Password</label>
-                          <input type="password" name="password" class="form-control" id="exampleInputPassword1" required>
-                        </div>
-                        <p>Don't have account? <a href="/register/">Register now</a></p>
-
-                        <div class="col-12 d-flex justify-content-center"> 
-                            <button type="submit" class="btn btn-primary btn ms-6 col-3">Login</button>
-                        </div>
-                      </form>
-                </div>
-            </div>
-            
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center mt-3">
+      <div class="card col-4">
+        <div class="card-header text-center text-light" style="background-color: #2c3e50">
+          <h1>Log In Here</h1>
         </div>
-    </div>
-</div>
+        <div class="card-body">
+          <form class="p-3" enctype="multipart/form-data" method="POST">
+            {% csrf_token %} {% if messages %}
 
+            <div class="alert alert-primary" role="alert">
+              {% for message in messages %} {{ message }} {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email id:</label>
+              <input
+                type="email"
+                name="email"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                required
+              />
+              <div id="emailHelp" class="form-text">
+                We'll never share your email with anyone else.
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input
+                type="password"
+                name="password"
+                class="form-control"
+                id="exampleInputPassword1"
+                required
+              />
+            </div>
+            <p>Don't have account? <a href="/register/">Register now</a></p>
+
+            <div class="col-12 d-flex justify-content-center">
+              <button type="submit" class="btn btn-primary btn ms-6 col-3">Login</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
